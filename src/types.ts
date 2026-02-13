@@ -17,8 +17,8 @@ export interface Post {
   comments?: Comment[];
   eta: string | null;
   show_on_roadmap: boolean;
-  is_merged: boolean;
   merged_into_id: string | null;
+  status_changed_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -29,8 +29,11 @@ export interface Board {
   slug: string;
   description: string | null;
   is_private: boolean;
+  categories_count?: number;
+  posts_count?: number;
   categories?: Category[];
-  post_count?: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Category {
@@ -45,6 +48,7 @@ export interface Member {
   name: string;
   email: string;
   avatar_url: string | null;
+  role: string;
   created_at: string;
 }
 
@@ -70,16 +74,27 @@ export interface Vote {
   created_at: string;
 }
 
+export interface ChangelogLabel {
+  id: string;
+  name: string;
+  slug: string;
+  color: string;
+}
+
 export interface ChangelogEntry {
   id: string;
   title: string;
   slug: string;
   content: string;
   status: string;
+  status_label: string;
   is_public: boolean;
   published_at: string | null;
   scheduled_at: string | null;
-  member?: Member;
+  member_id: number;
+  author?: Member;
+  labels?: ChangelogLabel[];
+  likes_count: number;
   created_at: string;
   updated_at: string;
 }
