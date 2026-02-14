@@ -1,14 +1,20 @@
 import axios, { AxiosError } from "axios";
-import { API_BASE_URL, API_KEY } from "./constants.js";
+import { API_BASE_URL, API_KEY, MEMBER_ID } from "./constants.js";
+
+const headers: Record<string, string> = {
+  "Content-Type": "application/json",
+  Accept: "application/json",
+  Authorization: `Bearer ${API_KEY}`,
+};
+
+if (MEMBER_ID) {
+  headers["X-Member-Id"] = MEMBER_ID;
+}
 
 const client = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30_000,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    Authorization: `Bearer ${API_KEY}`,
-  },
+  headers,
 });
 
 export interface ApiResponse<T = unknown> {
