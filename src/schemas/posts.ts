@@ -42,7 +42,7 @@ export const ListPostCommentsSchema = z.object({
 
 export const CreatePostCommentSchema = z.object({
   post_id: z.string().describe("Post ID (ULID)"),
-  body: z.string().min(1).max(10000).describe("Comment text"),
+  body: z.string().min(1).describe("Comment text, limited to 100 KB (102,400 bytes) of UTF-8 text"),
   parent_id: z.string().optional().describe("Parent comment ID (ULID) for replies"),
 }).strict();
 
@@ -52,7 +52,7 @@ export const GetCommentSchema = z.object({
 
 export const UpdateCommentSchema = z.object({
   comment_id: z.string().describe("Comment ID (ULID)"),
-  body: z.string().min(1).max(10000).describe("Updated comment text"),
+  body: z.string().min(1).describe("Updated comment text, limited to 100 KB (102,400 bytes) of UTF-8 text"),
 }).strict();
 
 export const DeleteCommentSchema = z.object({
