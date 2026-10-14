@@ -14,6 +14,7 @@ import {
   ListPostVotesSchema,
   CreatePostVoteSchema,
   DeletePostVoteSchema,
+  MergePostSchema,
 } from "../schemas/posts.js";
 
 // 1. List posts
@@ -217,6 +218,22 @@ server.registerTool("xcanny_delete_post_vote", {
     const { post_id, vote_id } = params;
     await apiDelete(`posts/${post_id}/votes/${vote_id}`);
     return { content: [{ type: "text", text: "Vote removed successfully." }] };
+  } catch (error) {
+    return { content: [{ type: "text", text: handleApiError(error) }], isError: true };
+  }
+});
+
+// 14. Merge post
+server.registerTool("xcanny_merge_post", {
+  title: "Merge Post",
+  description: "Merge a duplicate post (source_post_id) into another post (post_id). post_id is the target and survives; source_post_id is the source and disappears from lists. The source's votes, comments, and subscribers move to the target (duplicates are dropped), the source is marked as merged into the target, and a 'Merged post: <title>' comment is added to the target. Returns the target post. This cannot be undone through this API, so confirm which post is the target and which is the source before calling. Fails if the source is in another workspace, is the same post as the target, or is already merged.",
+  inputSchema: MergePostSchema.shape,
+  annotations: { readOnlyHint: false, destructiveHint: true },
+}, async (params) => {
+  try {
+    const { post_id, ...data } = params;
+    const res = await apiPost(`posts/${post_id}/merge`, data as Record<string, unknown>);
+    return { content: [{ type: "text", text: JSON.stringify(res, null, 2) }] };
   } catch (error) {
     return { content: [{ type: "text", text: handleApiError(error) }], isError: true };
   }

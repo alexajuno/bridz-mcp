@@ -74,3 +74,8 @@ export const DeletePostVoteSchema = z.object({
   post_id: z.string().describe("Post ID (ULID)"),
   vote_id: z.string().describe("Vote ID (ULID)"),
 }).strict();
+
+export const MergePostSchema = z.object({
+  post_id: z.string().describe("Target post ID (ULID). This post survives and receives the source post's votes, comments, and subscribers"),
+  source_post_id: z.string().describe("Source post ID (ULID). This post is merged into the target and disappears from lists"),
+}).strict();
